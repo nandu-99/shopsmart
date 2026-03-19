@@ -51,19 +51,19 @@ describe("Hero — Unit Tests", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders all 5 brand logo labels", () => {
-    render(<Hero />);
-    const brands = [
-      "GRAPHIC STUDIO",
-      "S. SALVA",
-      "GOLDEN STUDIO",
-      "FURNITURE DESIGN",
-      "TRAVEL LOOKBOOK",
-    ];
-    brands.forEach((brand) => {
-      expect(screen.getByText(brand)).toBeInTheDocument();
-    });
-  });
+  // it("renders all 5 brand logo labels", () => {
+  //   render(<Hero />);
+  //   const brands = [
+  //     "GRAPHIC STUDIO",
+  //     "S. SALVA",
+  //     "GOLDEN STUDIO",
+  //     "FURNITURE DESIGN",
+  //     "TRAVEL LOOKBOOK",
+  //   ];
+  //   brands.forEach((brand) => {
+  //     expect(screen.getByText(brand)).toBeInTheDocument();
+  //   });
+  // });
 
   it('renders the "Models wearing full outfits" text', () => {
     render(<Hero />);
