@@ -102,7 +102,7 @@ const Hero = () => {
         </div>
 
         {/* Brand Logos */}
-        <div className="mt-24 mb-12 flex justify-between items-center opacity-40 grayscale px-8">
+        {/* <div className="mt-24 mb-12 flex justify-between items-center opacity-40 grayscale px-8">
           {[
             "GRAPHIC STUDIO",
             "S. SALVA",
@@ -117,7 +117,7 @@ const Hero = () => {
               </span>
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
     </div>
   );
