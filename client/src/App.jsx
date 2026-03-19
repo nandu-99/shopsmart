@@ -10,6 +10,7 @@ import Product from "./pages/Product";
 import Profile from "./pages/Profile";
 
 function App() {
+  // TEST CHANGE
   return (
     <div className="font-sans text-primary">
       <Router>
