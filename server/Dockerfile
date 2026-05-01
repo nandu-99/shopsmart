@@ -1,19 +1,43 @@
-FROM node:18-alpine
+# syntax=docker/dockerfile:1.7
 
-# Set working directory
+# ----- Stage 1: builder -----
+FROM node:20-bookworm-slim AS builder
 WORKDIR /app
 
-# Copy package.json and package-lock.json first to leverage Docker cache
+# OpenSSL is required by Prisma's query engine
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends openssl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY package*.json ./
+COPY prisma ./prisma
+RUN npm ci --no-audit --no-fund
 
-# Install dependencies
-RUN npm install
+COPY src ./src
 
-# Copy the rest of the application code
-COPY . .
+# ----- Stage 2: runtime -----
+FROM node:20-bookworm-slim AS runtime
+WORKDIR /app
 
-# Expose the API port (adjust if your app uses a different port)
+# wget for HEALTHCHECK; openssl/ca-certificates for Prisma
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends wget openssl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV NODE_ENV=production \
+    PORT=5001
+
+# Copy artifacts from builder, owned by the unprivileged "node" user
+COPY --from=builder --chown=node:node /app/node_modules ./node_modules
+COPY --from=builder --chown=node:node /app/prisma ./prisma
+COPY --from=builder --chown=node:node /app/src ./src
+COPY --from=builder --chown=node:node /app/package*.json ./
+
+USER node
 EXPOSE 5001
 
-# Start the Node.js app
-CMD ["npm", "start"]
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD wget -qO- http://localhost:5001/api/health || exit 1
+
+# Apply pending migrations on boot, then start the server.
+CMD ["sh", "-c", "npx prisma migrate deploy && node src/index.js"]
