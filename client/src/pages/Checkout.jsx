@@ -17,6 +17,7 @@ export default function Checkout() {
       .then(setItems)
       .catch((e) => showToast(e.message, "error"))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const total = items.reduce(

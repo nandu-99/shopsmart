@@ -20,6 +20,7 @@ export default function Cart() {
 
   useEffect(() => {
     load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateQty = async (id, qty) => {

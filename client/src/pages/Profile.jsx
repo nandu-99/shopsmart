@@ -18,6 +18,7 @@ export default function Profile() {
       .then(setOrders)
       .catch((e) => showToast(e.message, "error"))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogout = () => {
