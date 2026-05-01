@@ -1,9 +1,8 @@
 name: Deploy to EC2
 
 on:
-  push:
-    branches:
-      - main
+  # Triggers disabled — replaced by post-midsem ECS pipeline. Manual runs only.
+  workflow_dispatch:
 
 jobs:
   deploy:

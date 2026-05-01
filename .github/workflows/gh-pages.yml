@@ -1,9 +1,8 @@
 name: Deploy Vite Client to GitHub Pages
 
 on:
-  push:
-    branches:
-      - main
+  # Triggers disabled — replaced by post-midsem S3+CloudFront frontend deploy. Manual runs only.
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -16,7 +15,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: client   
+        working-directory: client
 
     steps:
       - name: Checkout
@@ -39,7 +38,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: client/dist   
+          path: client/dist
 
       - name: Deploy
         uses: actions/deploy-pages@v4

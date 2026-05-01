@@ -11,6 +11,7 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "test": "jest --passWithNoTests",
+    "test:ci": "jest --ci --coverage --reporters=default --reporters=jest-junit",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{js,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{js,json,md}\"",
@@ -19,6 +20,27 @@
     "prisma:seed": "prisma db seed",
     "prisma:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force"
+  },
+  "jest-junit": {
+    "outputDirectory": "test-results",
+    "outputName": "junit.xml",
+    "ancestorSeparator": " > ",
+    "uniqueOutputName": "false",
+    "suiteNameTemplate": "{filepath}",
+    "classNameTemplate": "{classname}",
+    "titleTemplate": "{title}"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/index.js"
+    ],
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "html",
+      "lcov"
+    ]
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
@@ -33,6 +55,7 @@
     "eslint": "^9.39.2",
     "globals": "^17.3.0",
     "jest": "^29.7.0",
+    "jest-junit": "^17.0.0",
     "nodemon": "^3.1.0",
     "prettier": "^3.2.5",
     "prisma": "^5.22.0",
