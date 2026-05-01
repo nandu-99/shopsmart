@@ -13,12 +13,26 @@ jobs:
   frontend-tests:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: ./client
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: shopsmart
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost -prootpw"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      DATABASE_URL: "mysql://root:rootpw@localhost:3306/shopsmart"
+      JWT_SECRET: "ci-test-secret"
+      PORT: "5001"
 
     steps:
-      # Setup 
       - name: Checkout Code
         uses: actions/checkout@v4
 
@@ -27,32 +41,50 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'npm'
-          cache-dependency-path: client/package-lock.json
+          cache-dependency-path: |
+            client/package-lock.json
+            server/package-lock.json
 
-      # Install 
-      - name: Install Dependencies
+      # Server setup (needed so playwright can boot the API in webServer)
+      - name: Install Server Dependencies
+        working-directory: ./server
         run: npm install
 
-      # Code Quality 
+      - name: Apply Prisma Migrations
+        working-directory: ./server
+        run: npx prisma migrate deploy
+
+      - name: Seed Database
+        working-directory: ./server
+        run: npx prisma db seed
+
+      # Client setup
+      - name: Install Client Dependencies
+        working-directory: ./client
+        run: npm install
+
       - name: Lint
+        working-directory: ./client
         run: npm run lint
 
       - name: Format Check
+        working-directory: ./client
         run: npm run format:check
 
-      # Unit & Integration Tests (Vitest) 
       - name: Run Tests (Vitest)
+        working-directory: ./client
         run: npm test
 
-      # Build 
       - name: Build
+        working-directory: ./client
         run: npm run build
 
-      # E2E Tests (Playwright) 
       - name: Install Playwright Browsers
+        working-directory: ./client
         run: npx playwright install --with-deps chromium
 
       - name: Run E2E Tests (Playwright)
+        working-directory: ./client
         run: npm run test:e2e
 
       - name: Upload Playwright Report
