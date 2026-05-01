@@ -25,9 +25,7 @@ const Navbar = () => {
     }
     api
       .getCart()
-      .then((items) =>
-        setCartCount(items.reduce((s, i) => s + i.quantity, 0)),
-      )
+      .then((items) => setCartCount(items.reduce((s, i) => s + i.quantity, 0)))
       .catch(() => setCartCount(0));
   }, [user, cartVersion]);
 
@@ -136,7 +134,8 @@ const Navbar = () => {
             </Link>
             {["Men", "Women", "Kids", "Accessories"].map((item) => {
               const isActive =
-                onCollections && activeCategory.toLowerCase() === item.toLowerCase();
+                onCollections &&
+                activeCategory.toLowerCase() === item.toLowerCase();
               return (
                 <Link
                   key={item}

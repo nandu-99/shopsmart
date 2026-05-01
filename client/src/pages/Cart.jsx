@@ -45,10 +45,7 @@ export default function Cart() {
     }
   };
 
-  const total = items.reduce(
-    (sum, i) => sum + i.product.price * i.quantity,
-    0,
-  );
+  const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
 
   if (loading) {
     return <Spinner label="Loading your cart..." />;
@@ -118,9 +115,7 @@ export default function Cart() {
           </ul>
 
           <div className="flex justify-between items-center">
-            <p className="text-xl font-semibold">
-              Total: ${total.toFixed(2)}
-            </p>
+            <p className="text-xl font-semibold">Total: ${total.toFixed(2)}</p>
             <Link
               to="/checkout"
               className="bg-black text-white px-6 py-3 rounded-full font-medium hover:bg-gray-800"

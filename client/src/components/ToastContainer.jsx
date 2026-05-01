@@ -10,9 +10,7 @@ export default function ToastContainer() {
         <div
           key={t.id}
           className={`flex items-center gap-2 px-4 py-3 rounded-lg shadow-lg text-sm pointer-events-auto animate-[slide-in_0.2s_ease-out] ${
-            t.type === "error"
-              ? "bg-red-600 text-white"
-              : "bg-black text-white"
+            t.type === "error" ? "bg-red-600 text-white" : "bg-black text-white"
           }`}
         >
           {t.type === "error" ? (

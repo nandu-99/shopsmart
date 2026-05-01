@@ -22,10 +22,7 @@ export default function CartDrawer() {
       .finally(() => setLoading(false));
   }, [cartOpen, user, cartVersion]);
 
-  const total = items.reduce(
-    (sum, i) => sum + i.product.price * i.quantity,
-    0,
-  );
+  const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
 
   const updateQty = async (id, qty) => {
     if (qty < 1) return;

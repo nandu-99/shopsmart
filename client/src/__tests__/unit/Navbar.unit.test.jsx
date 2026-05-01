@@ -58,7 +58,7 @@ describe("Navbar — Unit Tests", () => {
     expect(cartLink).toBeInTheDocument();
   });
 
-  it('renders login link when user is not authenticated', () => {
+  it("renders login link when user is not authenticated", () => {
     renderNavbar();
     const loginLink = screen.getByRole("link", { name: /login/i });
     expect(loginLink).toHaveAttribute("href", "/login");

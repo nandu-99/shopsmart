@@ -18,9 +18,7 @@ describe("Hero — Unit Tests", () => {
 
   it('renders the "Shop Now" CTA link', () => {
     renderHero();
-    expect(
-      screen.getByRole("link", { name: /shop now/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /shop now/i })).toBeInTheDocument();
   });
 
   it('renders the "15 Million+" customer stat', () => {

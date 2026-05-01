@@ -51,8 +51,6 @@ describe("App Integration — Route Rendering", () => {
 
   it("renders the shop now link on the home page", () => {
     render(<App />);
-    expect(
-      screen.getByRole("link", { name: /shop now/i }),
-    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /shop now/i })).toBeInTheDocument();
   });
 });

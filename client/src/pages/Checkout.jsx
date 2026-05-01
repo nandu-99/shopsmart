@@ -20,10 +20,7 @@ export default function Checkout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const total = items.reduce(
-    (sum, i) => sum + i.product.price * i.quantity,
-    0,
-  );
+  const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
 
   const placeOrder = async () => {
     setPlacing(true);
