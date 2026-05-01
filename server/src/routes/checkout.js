@@ -14,10 +14,7 @@ router.post("/", async (req, res) => {
   if (items.length === 0) {
     return res.status(400).json({ error: "Cart is empty" });
   }
-  const total = items.reduce(
-    (sum, i) => sum + i.product.price * i.quantity,
-    0,
-  );
+  const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0);
 
   const order = await prisma.$transaction(async (tx) => {
     const created = await tx.order.create({
