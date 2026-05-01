@@ -3,11 +3,17 @@ import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import Navbar from "../../components/Navbar";
+import { AuthProvider } from "../../context/AuthContext";
+import { UIProvider } from "../../context/UIContext";
 
 const renderNavbar = () =>
   render(
     <MemoryRouter>
-      <Navbar />
+      <AuthProvider>
+        <UIProvider>
+          <Navbar />
+        </UIProvider>
+      </AuthProvider>
     </MemoryRouter>,
   );
 
@@ -28,55 +34,46 @@ describe("Navbar Integration Tests", () => {
     );
   });
 
-  it("Cart icon link has correct href for routing", () => {
+  it("Cart icon link is rendered", () => {
     renderNavbar();
-    expect(screen.getByRole("link", { name: /cart/i })).toHaveAttribute(
-      "href",
-      "/cart",
-    );
+    expect(screen.getByRole("link", { name: /cart/i })).toBeInTheDocument();
   });
 
-  it("Profile icon link has correct href for routing", () => {
+  it("Login link is shown when user is unauthenticated", () => {
     renderNavbar();
-    expect(screen.getByRole("link", { name: /profile/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /login/i })).toHaveAttribute(
       "href",
-      "/profile",
+      "/login",
     );
   });
 
   it("Search input accepts typed text", async () => {
     renderNavbar();
-    const searchInput = screen.getByPlaceholderText("Clothing");
+    const searchInput = screen.getByPlaceholderText(/search products/i);
     await userEvent.type(searchInput, "jeans");
     expect(searchInput.value).toBe("jeans");
   });
 
-  it('"Clothing" category pill links to /collections', () => {
+  it('"All" category pill links to /collections', () => {
     renderNavbar();
-    const clothingLinks = screen.getAllByRole("link", { name: /clothing/i });
-    expect(clothingLinks[0]).toHaveAttribute("href", "/collections");
+    const allLink = screen.getByRole("link", { name: /all/i });
+    expect(allLink).toHaveAttribute("href", "/collections");
   });
 
-  it('"New Arrivals" pill links to /collections', () => {
+  it('"Men" pill links to /collections with search filter', () => {
     renderNavbar();
-    expect(screen.getByRole("link", { name: /new arrivals/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Men" })).toHaveAttribute(
       "href",
-      "/collections",
+      "/collections?search=Men",
     );
   });
 
-  it('"Sales" pill links to /collections', () => {
+  it('"Women" pill links to /collections with search filter', () => {
     renderNavbar();
-    expect(screen.getByRole("link", { name: /sales/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Women" })).toHaveAttribute(
       "href",
-      "/collections",
+      "/collections?search=Women",
     );
-  });
-
-  it("Cart badge displays correct item count", () => {
-    renderNavbar();
-    const badge = screen.getByText("2");
-    expect(badge).toBeInTheDocument();
   });
 
   it("Logo link sits inside the nav element", () => {

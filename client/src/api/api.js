@@ -1,41 +1,47 @@
-// API layer for ShopSmart — mock-friendly fetch wrapper
+import { apiFetch } from "./client";
 
-const BASE_URL = "/api";
+// Products
+export const getProducts = (search) =>
+  apiFetch(`/products${search ? `?search=${encodeURIComponent(search)}` : ""}`);
 
-export async function getProducts() {
-  const res = await fetch(`${BASE_URL}/products`);
-  return res.json();
-}
+export const getProduct = (id) => apiFetch(`/products/${id}`);
 
-export async function getProduct(id) {
-  const res = await fetch(`${BASE_URL}/products/${id}`);
-  return res.json();
-}
+export const searchProducts = (query) => getProducts(query);
 
-export async function getCart() {
-  const res = await fetch(`${BASE_URL}/cart`);
-  return res.json();
-}
-
-export async function addToCart(item) {
-  const res = await fetch(`${BASE_URL}/cart`, {
+// Auth
+export const register = (email, password, name) =>
+  apiFetch("/auth/register", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(item),
+    body: JSON.stringify({ email, password, name }),
   });
-  return res.json();
-}
 
-export async function removeFromCart(id) {
-  const res = await fetch(`${BASE_URL}/cart/${id}`, {
-    method: "DELETE",
+export const login = (email, password) =>
+  apiFetch("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password }),
   });
-  return res.json();
-}
 
-export async function searchProducts(query) {
-  const res = await fetch(
-    `${BASE_URL}/products?search=${encodeURIComponent(query)}`,
-  );
-  return res.json();
-}
+export const me = () => apiFetch("/auth/me");
+
+// Cart
+export const getCart = () => apiFetch("/cart");
+
+export const addToCart = (productId, quantity = 1) =>
+  apiFetch("/cart", {
+    method: "POST",
+    body: JSON.stringify({ productId, quantity }),
+  });
+
+export const updateCartItem = (id, quantity) =>
+  apiFetch(`/cart/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify({ quantity }),
+  });
+
+export const removeFromCart = (id) =>
+  apiFetch(`/cart/${id}`, { method: "DELETE" });
+
+// Checkout
+export const checkout = () => apiFetch("/checkout", { method: "POST" });
+
+export const getOrders = () => apiFetch("/checkout/orders");

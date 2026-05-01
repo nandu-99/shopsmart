@@ -1,27 +1,35 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import Hero from "../../components/Hero";
 
+const renderHero = () =>
+  render(
+    <MemoryRouter>
+      <Hero />
+    </MemoryRouter>,
+  );
+
 describe("Hero — Unit Tests", () => {
   it('renders the main heading "Unleash Your Style"', () => {
-    render(<Hero />);
+    renderHero();
     expect(screen.getByText(/unleash your style/i)).toBeInTheDocument();
   });
 
-  it('renders the "Shop Now" CTA button', () => {
-    render(<Hero />);
+  it('renders the "Shop Now" CTA link', () => {
+    renderHero();
     expect(
-      screen.getByRole("button", { name: /shop now/i }),
+      screen.getByRole("link", { name: /shop now/i }),
     ).toBeInTheDocument();
   });
 
   it('renders the "15 Million+" customer stat', () => {
-    render(<Hero />);
+    renderHero();
     expect(screen.getByText(/15 Million\+/i)).toBeInTheDocument();
   });
 
   it("renders 4 avatar images from pravatar", () => {
-    render(<Hero />);
+    renderHero();
     const avatars = screen.getAllByAltText("user");
     expect(avatars).toHaveLength(4);
     avatars.forEach((img) => {
@@ -30,24 +38,24 @@ describe("Hero — Unit Tests", () => {
   });
 
   it("renders the hero main image with correct alt text", () => {
-    render(<Hero />);
+    renderHero();
     expect(screen.getByAltText("Man in sweater")).toBeInTheDocument();
   });
 
-  it("renders the Cream Jacket product card image", () => {
-    render(<Hero />);
-    expect(screen.getByAltText("Cream Jacket")).toBeInTheDocument();
+  it("renders the Men collection card image", () => {
+    renderHero();
+    expect(screen.getByAltText("Men collection")).toBeInTheDocument();
   });
 
-  it("renders the Clothes Rack product card image", () => {
-    render(<Hero />);
-    expect(screen.getByAltText("Clothes Rack")).toBeInTheDocument();
+  it("renders the Women collection card image", () => {
+    renderHero();
+    expect(screen.getByAltText("Women collection")).toBeInTheDocument();
   });
 
-  it('renders the "Explore now" button on the third card', () => {
-    render(<Hero />);
+  it('renders the "Explore now" link on the third card', () => {
+    renderHero();
     expect(
-      screen.getByRole("button", { name: /explore now/i }),
+      screen.getByRole("link", { name: /explore now/i }),
     ).toBeInTheDocument();
   });
 
@@ -66,7 +74,7 @@ describe("Hero — Unit Tests", () => {
   // });
 
   it('renders the "Models wearing full outfits" text', () => {
-    render(<Hero />);
+    renderHero();
     expect(screen.getByText(/models wearing/i)).toBeInTheDocument();
   });
 });

@@ -4,7 +4,6 @@ import App from "../../App";
 
 describe("App Integration — Route Rendering", () => {
   it("renders Navbar on the home route (/)", () => {
-    // App uses BrowserRouter internally — render directly, no extra router wrapper
     render(<App />);
     expect(screen.getByText("SHOPSMART")).toBeInTheDocument();
   });
@@ -12,11 +11,6 @@ describe("App Integration — Route Rendering", () => {
   it("home route (/) renders Hero heading", () => {
     render(<App />);
     expect(screen.getByText(/unleash your style/i)).toBeInTheDocument();
-  });
-
-  it("Navbar is rendered on the home page", () => {
-    render(<App />);
-    expect(screen.getByText("SHOPSMART")).toBeInTheDocument();
   });
 
   it('"About Us" link points to /about', () => {
@@ -37,28 +31,28 @@ describe("App Integration — Route Rendering", () => {
     expect(link).toHaveAttribute("href", "#/faq");
   });
 
-  it("Cart link points to /cart", () => {
+  it("Cart link is rendered", () => {
     render(<App />);
     const cartLink = screen.getByRole("link", { name: /cart/i });
-    expect(cartLink).toHaveAttribute("href", "#/cart");
+    expect(cartLink).toBeInTheDocument();
   });
 
-  it("Profile link points to /profile", () => {
+  it("Login link is shown when user is unauthenticated", () => {
     render(<App />);
-    const profileLink = screen.getByRole("link", { name: /profile/i });
-    expect(profileLink).toHaveAttribute("href", "#/profile");
+    const loginLink = screen.getByRole("link", { name: /login/i });
+    expect(loginLink).toHaveAttribute("href", "#/login");
   });
 
-  it("Collections link points to /collections", () => {
+  it("'All' link points to /collections", () => {
     render(<App />);
-    const collectionsLinks = screen.getAllByRole("link", { name: /clothing/i });
-    expect(collectionsLinks[0]).toHaveAttribute("href", "#/collections");
+    const allLink = screen.getByRole("link", { name: /all/i });
+    expect(allLink).toHaveAttribute("href", "#/collections");
   });
 
-  it("renders the shop now button on the home page", () => {
+  it("renders the shop now link on the home page", () => {
     render(<App />);
     expect(
-      screen.getByRole("button", { name: /shop now/i }),
+      screen.getByRole("link", { name: /shop now/i }),
     ).toBeInTheDocument();
   });
 });

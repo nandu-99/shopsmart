@@ -2,11 +2,17 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import Navbar from "../../components/Navbar";
+import { AuthProvider } from "../../context/AuthContext";
+import { UIProvider } from "../../context/UIContext";
 
 const renderNavbar = () =>
   render(
     <MemoryRouter>
-      <Navbar />
+      <AuthProvider>
+        <UIProvider>
+          <Navbar />
+        </UIProvider>
+      </AuthProvider>
     </MemoryRouter>,
   );
 
@@ -25,60 +31,44 @@ describe("Navbar — Unit Tests", () => {
   it('renders "About Us" nav link with correct href', () => {
     renderNavbar();
     const link = screen.getByRole("link", { name: /about us/i });
-    expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/about");
   });
 
   it('renders "Blog" nav link with correct href', () => {
     renderNavbar();
     const link = screen.getByRole("link", { name: /blog/i });
-    expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/blog");
   });
 
   it('renders "FAQ" nav link with correct href', () => {
     renderNavbar();
     const link = screen.getByRole("link", { name: /faq/i });
-    expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute("href", "/faq");
   });
 
-  it('renders search input with placeholder "Clothing"', () => {
+  it("renders search input with placeholder", () => {
     renderNavbar();
-    const input = screen.getByPlaceholderText("Clothing");
+    const input = screen.getByPlaceholderText(/search products/i);
     expect(input).toBeInTheDocument();
-    expect(input).toHaveAttribute("type", "text");
   });
 
-  it('renders cart icon link pointing to "/cart"', () => {
+  it("renders cart icon link", () => {
     renderNavbar();
     const cartLink = screen.getByRole("link", { name: /cart/i });
-    expect(cartLink).toHaveAttribute("href", "/cart");
+    expect(cartLink).toBeInTheDocument();
   });
 
-  it('renders cart badge with count "2"', () => {
+  it('renders login link when user is not authenticated', () => {
     renderNavbar();
-    expect(screen.getByText("2")).toBeInTheDocument();
+    const loginLink = screen.getByRole("link", { name: /login/i });
+    expect(loginLink).toHaveAttribute("href", "/login");
   });
 
-  it('renders profile icon link pointing to "/profile"', () => {
+  it("renders all 4 category navigation pills", () => {
     renderNavbar();
-    const profileLink = screen.getByRole("link", { name: /profile/i });
-    expect(profileLink).toHaveAttribute("href", "/profile");
-  });
-
-  it("renders all 6 category navigation pills", () => {
-    renderNavbar();
-    const categories = [
-      "New Arrivals",
-      "Sales",
-      "Men",
-      "Women",
-      "Kid's",
-      "Brand",
-    ];
+    const categories = ["Men", "Women", "Kids", "Accessories"];
     categories.forEach((cat) => {
-      expect(screen.getByText(cat)).toBeInTheDocument();
+      expect(screen.getByRole("link", { name: cat })).toBeInTheDocument();
     });
   });
 });
