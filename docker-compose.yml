@@ -1,0 +1,80 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: shopsmart-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpw
+      MYSQL_DATABASE: shopsmart
+    # Host 3307 → container 3306. Avoids conflicting with a local MySQL on 3306.
+    # Containers still talk to each other via "mysql:3306" on the internal network.
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-prootpw"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - shopsmart-net
+
+  server:
+    build:
+      context: ./server
+    image: shopsmart-server:latest
+    container_name: shopsmart-server
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: "mysql://root:rootpw@mysql:3306/shopsmart"
+      JWT_SECRET: "docker-dev-secret-change-me"
+      PORT: "5001"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    # Host 5002 → container 5001. Avoids conflicting with a local API on 5001.
+    # The client container still calls "server:5001" on the internal network.
+    ports:
+      - "5002:5001"
+    networks:
+      - shopsmart-net
+
+  client:
+    build:
+      context: ./client
+    image: shopsmart-client:latest
+    container_name: shopsmart-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    # Host 8080 → container 80. Avoids conflicting with a local Vite dev server on 5173.
+    ports:
+      - "8080:80"
+    networks:
+      - shopsmart-net
+
+  # One-shot seeder — run via:
+  #   docker compose --profile seed up seeder
+  seeder:
+    build:
+      context: ./server
+    image: shopsmart-server:latest
+    container_name: shopsmart-seeder
+    profiles: ["seed"]
+    environment:
+      DATABASE_URL: "mysql://root:rootpw@mysql:3306/shopsmart"
+    command: ["npx", "prisma", "db", "seed"]
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - shopsmart-net
+
+networks:
+  shopsmart-net:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local

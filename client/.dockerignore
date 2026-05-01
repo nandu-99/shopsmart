@@ -1,0 +1,17 @@
+node_modules
+dist
+build
+.next
+.vite
+.env
+.env.*
+.git
+.gitignore
+coverage
+test-results
+playwright-report
+tests/e2e
+Dockerfile
+.dockerignore
+*.md
+.DS_Store
