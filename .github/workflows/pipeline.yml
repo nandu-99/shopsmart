@@ -3,8 +3,8 @@ name: Pipeline
 # Rubric workflow order:
 #   Push → Run Tests → Terraform Apply → Docker Build & Push → Deploy to ECS
 on:
-  push:
-    branches: [main]
+  # push:
+  #   branches: [main]
   workflow_dispatch:
 
 concurrency:
