@@ -18,6 +18,7 @@ import Profile from "./pages/Profile";
 import Register from "./pages/Register";
 
 function App() {
+  // TEST CHANGE
   return (
     <div className="font-sans text-primary">
       <AuthProvider>
@@ -67,4 +68,4 @@ function App() {
   );
 }
 
-export default App;
+export default Appp;
